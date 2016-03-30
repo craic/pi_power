@@ -4,7 +4,7 @@ Experiments in running portable Raspberry Pi systems from rechargeable batteries
 The Raspberry Pi is a low cost, single board computer with reasonable performance and relatively low power
 consumption. They are typically configured with the Linux operating system.
 
-The Raspberry Pi family of boards have turned out to be very useful machines for standalone and/or
+The Pi family of boards have turned out to be very useful machines for standalone and/or
 portable projects such as remote environment monitoring, cameras, etc.
 
 But in order to be truly portable, a system needs to include a power source and a way to control

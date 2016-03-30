@@ -22,3 +22,4 @@ What I want is something equivalent to the way my iPhone works.
 - To recharge the battery I just plug in a cable from a USB charger.
 
 
+test

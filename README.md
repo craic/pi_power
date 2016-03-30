@@ -1,5 +1,4 @@
 # pi_power
-Experiments in running portable Raspberry Pi systems from rechargeable batteries
 
 The Raspberry Pi is a low cost, single board computer with reasonable performance and relatively low power
 consumption. They are typically configured with the Linux operating system.

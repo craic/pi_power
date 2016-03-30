@@ -11,8 +11,6 @@ But in order to be truly portable, a system needs to include a power source and 
 that power - such as a rechargeable battery, a charger, an on/off switch and some
 way to monitor battery status.
 
-Many people have worked on parts of this problem but there is no really good overall solution.
-
 What I want is something equivalent to the way my iPhone works.
 - I power it up from a cold state by holding down a button for a few seconds.
 - To power it off I press the same button for a few seconds (and swipe an alert on the screen)
@@ -22,4 +20,11 @@ What I want is something equivalent to the way my iPhone works.
 - To recharge the battery I just plug in a cable from a USB charger.
 
 
-test
+A number of people have worked on pieces of this puzzle but I have yet to see a complete
+solution. This repository documents my attempt to reach this goal.
+
+Please take a look at the Wiki to see some of my prototypes.
+
+
+
+

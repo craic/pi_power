@@ -22,7 +22,7 @@ What I want is something equivalent to the way my iPhone works.
 A number of people have worked on pieces of this puzzle but I have yet to see a complete
 solution. This repository documents my attempt to reach this goal.
 
-Please take a look at the Wiki to see some of my prototypes.
+Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power-Wiki) to see some of my experiments.
 
 
 

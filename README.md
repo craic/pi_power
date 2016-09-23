@@ -54,6 +54,20 @@ when the battery runs out, or when the user pushes a button. It writes the curre
 *Read on for details...*
 
 
+# How it works
+
+Starting with a powered down system, press the pushbutton and hold for a few seconds. The green activity LED on the Pi will start flickering to show
+that the system is booting up. At that point you can release the pushbutton. You'll see the boot messages if you have a screen attached.
+
+The two pi_power scripts will start up in background and the power status LEDs will indicate the current status.
+These will change according to whether or not the USB power cable is connected and the current battery state.
+
+You can safely shutdown the system manually by pressing the pushbutton again. The Pi will shutdown and the PowerBoost will stop providing power
+to the Pi (the blue PowerBoost LED will go out). If the USB cable is connected, the battery will continue to recharge.
+
+If you let the battery run out, the Red LED will warn you by flashing and when the fraction remaining reaches a low, but safe, level the system will
+shutdown. The shutdown level is set to ensure a safe shutdown before the battery is completley exhausted.
+
 # Hardware
 
 The system uses a
@@ -195,19 +209,6 @@ system start up script*
 *to be added...*
 
 
-# How it works
-
-Starting with a powered down system, press the pushbutton and hold for a few seconds. The green activity LED on the Pi will start flickering to show
-that the system is booting up. At that point you can release the pushbutton. You'll see the boot messages if you have a screen attached.
-
-The two pi_power scripts will start up in background and the power status LEDs will indicate the current status.
-These will change according to whether or not the USB power cable is connected and the current battery state.
-
-You can safely shutdown the system manually by pressing the pushbutton again. The Pi will shutdown and the PowerBoost will stop providing power
-to the Pi (the blue PowerBoost LED will go out). If the USB cable is connected, the battery will continue to recharge.
-
-If you let the battery run out, the Red LED will warn you by flashing and when the fraction remaining reaches a low, but safe, level the system will
-shutdown. The shutdown level is set to ensure a safe shutdown before the battery is completley exhausted.
 
 
 # Notes
@@ -216,13 +217,17 @@ Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power
 
 
 The power on / power off machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project from Daniel Bull, which I have contributed to.
-If you want a simpler solution without the voltage monitoring machinery then please check this project.
+If you want a simpler solution without the voltage monitoring machinery then LiPoPi might be just what you need.
 
 
 
 Use raspiconfig for older Pis...
 
 Add the fix for Pi 3 etc...
+
+Currently there is no way for the software to know when the battery is fully charged. On the PowerBoost, the yellow charging LED changes to Green, so
+the information is available. There is just no easy way to get it to the Pi. Accurately estimating it from the voltage does not seem to work
+well in practice.
 
 
 

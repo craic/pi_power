@@ -21,23 +21,15 @@ What I want is something equivalent to the way my iPhone works
 - To recharge the battery, just plug in a cable from a USB charger
 
 
-A number of people have worked on pieces of this puzzle but I have yet to see a complete
-solution. This project is my attempt at one.
+This project provides one approach to reaching this goal.
 
 
-Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power-Wiki) for more background.
+The system consists of some relatively simple circuitry that links the Pi with a LiPoly battery charger
+and two Python scripts that handle monitoring and control.
 
 
-This system consists of some relatively simple circuitry that links the Pi with an Adafruit PowerBoost 1000C LiPoly charger
-and two Python scripts.
 
-[pi_power.py](pi_power.py) monitors the battery voltage and handles shutdown of the system
-when the battery runs out, or when the user pushes a button. It writes the current battery status to a file.
-
-[pi_power_leds.py](pi_power_leds.py) checks the status file and sets a red or green led according to that.
-
-
-The hardware looks like this:
+The **hardware** looks like this:
 
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 
@@ -49,26 +41,30 @@ The hardware looks like this:
 
 
 
+The **software** consists of two python scripts:
+
+[pi_power.py](pi_power.py) monitors the battery voltage and handles shutdown of the system
+when the battery runs out, or when the user pushes a button. It writes the current battery status to a file.
+
+[pi_power_leds.py](pi_power_leds.py) checks the status file and sets a red or green led according to that.
+
+
+
+
+
+# Hardware
+
 ![Breadboard](/images/pi_power_breadboard_small.png)
 
 Here is a larger version of this [layout](https://github.com/craic/pi_power/images/pi_power_breadboard.png)
 
 
 
-The software consists of two python scripts:
-
-pi_power.py
-
-This monitors the ADC and the pushbutton and updates the power status file.
-
-pi_power_leds.py
-
-This checks the power status file and sets one of two LEDs accordingly.
-
-
-
 
 # Notes
+
+Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power-Wiki) for more background.
+
 
 The power on / power off machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project from Daniel Bull, which I have contributed to.
 

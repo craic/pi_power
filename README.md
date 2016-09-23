@@ -132,6 +132,21 @@ And here is what my actual breadboard looks like - not pretty, but functional
 
 ![Breadboard Photo](/images/breadboard_photo.jpg)
 
+The breadboard layout was created to make the circuit easy to understand (you may argue whether or not I succeeded in that!).
+One consequence of that is that a number of the jumper wires are relatively long, compared to a compact circuit board.
+This may have a couple of unwanted side effects.
+
+Long wires attached to RasPi GPIO pins may act as radio aerials. Even though the code uses internal pull-down resistors to avoid the pins from floating,
+I did have a problem with the shutdown pin (GPIO26 in the circuit) getting triggered when I plugged the PowerBoost 1000C input USB
+cable back in, after it had been disconnected.
+I solved that by placing a 0.1uF ceramic capacitor between GPIO26 and Ground.
+
+In addition, there can be voltage drop over longer wires and the breadboard tracks. The Adafruit guide to the PowerBoost 1000C mentions this.
+*Shorter wires are better*
+
+
+Please do not just wire your circuit from the breadboard diagram - *understand the circuit first* - you may be able to come up with a neater layout and,
+more importantly, I may have made a mistake in creating the diagram.
 
 # Software
 
@@ -180,6 +195,19 @@ system start up script*
 *to be added...*
 
 
+# How it works
+
+Starting with a powered down system, press the pushbutton and hold for a few seconds. The green activity LED on the Pi will start flickering to show
+that the system is booting up. At that point you can release the pushbutton. You'll see the boot messages if you have a screen attached.
+
+The two pi_power scripts will start up in background and the power status LEDs will indicate the current status.
+These will change according to whether or not the USB power cable is connected and the current battery state.
+
+You can safely shutdown the system manually by pressing the pushbutton again. The Pi will shutdown and the PowerBoost will stop providing power
+to the Pi (the blue PowerBoost LED will go out). If the USB cable is connected, the battery will continue to recharge.
+
+If you let the battery run out, the Red LED will warn you by flashing and when the fraction remaining reaches a low, but safe, level the system will
+shutdown. The shutdown level is set to ensure a safe shutdown before the battery is completley exhausted.
 
 
 # Notes
@@ -188,28 +216,14 @@ Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power
 
 
 The power on / power off machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project from Daniel Bull, which I have contributed to.
-
-The breadboard layout was created to make the circuit easy to understand (you may argue whether or not I succeeded in that!).
-One consequence of that is that a number of the jumper wires are relatively long, compared to a compact circuit board.
-This may have a couple of unwanted side effects.
-
-Long wires attached to RasPi GPIO pins may act as radio aerials. Even though the code uses internal pull-down resistors to avoid the pins from floating,
-I did have a problem with the shutdown pin (GPIO26 in the circuit) getting triggered when I plugged the PowerBoost 1000C input USB
-cable back in, after it had been disconnected.
-I solved that by placing a 0.1uF ceramic capacitor between GPIO26 and Ground.
-
-In addition, there can be voltage drop over longer wires and the breadboard tracks. The Adafruit guide to the PowerBoost 1000C mentions this.
-*Shorter wires are better*
+If you want a simpler solution without the voltage monitoring machinery then please check this project.
 
 
-Please do not just wire your circuit from the breadboard diagram - understand the circuit first - you may be able to come up with a neater layout and,
-more importantly, I may have made a mistake in creating the diagram.
 
 Use raspiconfig for older Pis...
 
 Add the fix for Pi 3 etc...
 
-Warning about systemd etc...
 
 
 

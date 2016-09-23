@@ -1,4 +1,4 @@
-# pi_power
+# Pi Power
 
 **As of 09/23/2016 this is incomplete - I'm trying to get it finished but please don't go building a version of it until it's ready - please check back soon**
 
@@ -59,7 +59,8 @@ when the battery runs out, or when the user pushes a button. It writes the curre
 The system uses a
 [Adafruit PowerBoost 1000 Charger - Rechargeable 5V Lipo USB Boost @ 1A - 1000C](https://www.adafruit.com/products/2465)
 to provide regulated 5V power from a LiPoly battery or a USB power supply. When a USB power supply is attached, the PowerBoost not
-only powers the RasPi but also recharges the battery. It is a great little device for this sort of project.
+only powers the RasPi but also recharges the battery. It is a great little device for this sort of project. Adafruit sell it
+for around $20 and they have a detailed [tutorial](https://learn.adafruit.com/adafruit-powerboost-1000c-load-share-usb-charge-boost) available.
 
 There are three parts to the circuitry
 
@@ -67,7 +68,9 @@ There are three parts to the circuitry
 
 A momentary pushbutton switch is used to power up the Pi from a cold start and to trigger an orderly shutdown of the system.
 This machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
-from Daniel Bull, which I contributed to. Note that it leaves out the low battery component of that project as we can monitor that as part of the
+from Daniel Bull, which I contributed to. Please check out that site for information on how that all works.
+
+Note that it leaves out the low battery component of that project as we can monitor that as part of the
 battery voltage in the next section.
 
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
@@ -75,24 +78,36 @@ battery voltage in the next section.
 
 ## Voltage Monitoring with an ADC
 
-The PowerBoost1000C has several pins that we can measure voltages from.
+To assess how much power is left in a battery we can use the pins on the PowerBoost1000C. The Pi does not have an Analog to Digital Converter
+itself so we need to add an external one in the form of a [MCP3008](https://www.adafruit.com/products/856), which is an 8-Channel 10-Bit ADC With SPI Interface.
+We are only using two channels so this is a bit of an overkill, but they are not expensive (around $4).
 
-The **Bat** pin has the output voltage of the LiPoly battery
-
-The **USB** pin has the voltage of the input USB connection. When the cable is not connected this is 0 V and around 5.2V when connected.
+The **USB** pin on the PowerBoost has the voltage of the input USB connection. When the cable is not connected this is 0 V and around 5.2V when connected.
 Nominally, a USB power supply provides 5V but manufacturers often bump this up a little bit to counteract any voltage drop over
 the supply cables.
 
 The measured USB voltage is used to determine if the cable is attached or not. Doing this via an ADC is overkill but
-as we need one for the battery voltage, it makes sense to use it.
+as we need the ADC for the battery voltage, it makes sense to use it.
 
-The Battery voltage is what really tells us the current battery status.
+
+The Battery voltage on the **Bat** pin is what really tells us the current battery status. This has the output voltage of the LiPoly battery,
+which varies from 3.7V when depleted to around 4.2V when fully charged.
+
+The maximum input voltage for the analog side of the ADC is 3.3V so we need to reduce the PowerBoost voltages using a
+pair of resistors acting as a [Voltage Divider](https://en.wikipedia.org/wiki/Voltage_divider). In this case a combination of 6.8K and 10K resistors
+brings the maximum input voltages into the desired range.
+
+The ADC uses the SPI interface on the RaspberryPi side which uses four GPIO pins. The code for this interface was written by the Adafruit
+team and manages SPI in software, as opposed to the Pi's hardware SPI interface, so you can choose other GPIO pins if necessary.
 
 ![Battery monitor ADC - schematic](/images/pi_power_schematic_2.png)
 
+Note that this is a schematic and does not correspond to the actual chip pinout.
 
 
 ## Battery Status LEDs
+
+The system needs a way
 
 ![Status LEDs - schematic](/images/pi_power_schematic_3.png)
 

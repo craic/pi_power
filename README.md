@@ -22,7 +22,7 @@ What I want is something equivalent to the way my iPhone works
 
 
 This project provides one approach to reaching this goal, building on the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
-from Daniel Bull, which I have contributed to.
+from Daniel Bull.
 
 # Overview
 
@@ -67,7 +67,8 @@ There are three parts to the circuitry
 
 A momentary pushbutton switch is used to power up the Pi from a cold start and to trigger an orderly shutdown of the system.
 This machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
-from Daniel Bull.
+from Daniel Bull, which I contributed to. Note that it leaves out the low battery component of that project as we can monitor that as part of the
+battery voltage in the next section.
 
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 

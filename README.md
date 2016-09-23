@@ -73,16 +73,23 @@ from Daniel Bull, which I contributed to. Please check out that site for informa
 Note that it leaves out the low battery component of that project as we can monitor that as part of the
 battery voltage in the next section.
 
+Pre-RasPi 3 cicruit
+
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
+
+RasPi 3 circuit
+
+*to be added*
 
 
 ## Voltage Monitoring with an ADC
 
-To assess how much power is left in a battery we can use the pins on the PowerBoost1000C. The Pi does not have an Analog to Digital Converter
+To assess how much power is left in a battery we can use the pins on the PowerBoost1000C.
+The Pi does not have an [Analog to Digital Converter](https://en.wikipedia.org/wiki/Analog-to-digital_converter) (ADC)
 itself so we need to add an external one in the form of a [MCP3008](https://www.adafruit.com/products/856), which is an 8-Channel 10-Bit ADC With SPI Interface.
 We are only using two channels so this is a bit of an overkill, but they are not expensive (around $4).
 
-The **USB** pin on the PowerBoost has the voltage of the input USB connection. When the cable is not connected this is 0 V and around 5.2V when connected.
+The **USB** pin on the PowerBoost has the voltage of the input USB connection. When the cable is not connected this is 0V and around 5.2V when connected.
 Nominally, a USB power supply provides 5V but manufacturers often bump this up a little bit to counteract any voltage drop over
 the supply cables.
 
@@ -102,12 +109,13 @@ team and manages SPI in software, as opposed to the Pi's hardware SPI interface,
 
 ![Battery monitor ADC - schematic](/images/pi_power_schematic_2.png)
 
-Note that this is a schematic and does not correspond to the actual chip pinout.
+**Note that this is a schematic and does not correspond to the actual chip pinout.**
 
 
 ## Battery Status LEDs
 
-The system needs a way
+The system needs a way to tell the user how much power remains in the battery. One of the simplest ways is to control a Red and Green LED
+from the RasPi to implement a simple interface - green is good, red means low battery.
 
 ![Status LEDs - schematic](/images/pi_power_schematic_3.png)
 
@@ -127,19 +135,56 @@ And here is what my actual breadboard looks like - not pretty, but functional
 
 # Software
 
-**to be added...**
+*to be added...*
 
+The software end of Pi Power is split into two components.
+
+The first one does all the work. [pi_power.py](pi_power.py) monitors the battery, handles the power down process as
+well as shutting down the Pi is the battery runs out. It checks the battery every minute and records the current status
+in the file /home/pi/.pi_power_status.
+
+You can tun it with --debug or --log options if you want to capture the voltage changes over time, but it general it
+is intended to run as a background process that starts up automatically when the Pi boots up.
+
+
+There are many ways to inform the user about the power status. You might have a numeric display on a screen, or a bar graph
+like you get on some phones. Separating the monitoring and display components makes it easier for others to build
+different displays.
+
+I have chosen the simple approach here of using a Red and Green LED to indicate the general power status.
+[pi_power_leds.py](pi_power_leds.py) checks the status file and sets either led according to that.
+It is easy to change the specific LED patterns but the default ones are:
+
+* Green, Blinking - USB power source is connected
+* Green, Constant - Battery - more than 25% of battery remains
+* Red, Constant - Battery - more than 15% of battery remains
+* Red, Blinking - Battery - more than 10% of battery remains
+* Red, Blinking Fast - Battery - less than 10% of battery remains - system will shutdown soon
+
+The script checks the status file every 30 seconds so there can be a delay between, say, plugging in a USB supply and the LEDs
+updating. Reducing the poll interval would improve this.
 
 # Deployment
 
-**to be added...**
+Both scripts are intended to be run as silent background processes that start up when the Pi boots.
+
+One location for these would be /etc/rc.local
+
+
+**NOTE** The Pi boot process is different from other Linux systems in that there is no single-user mode. That
+makes it difficult to fix problems in start up scripts like this as you have no easy way to run the system
+up to, but not including, the problem script. *So... test everything really well before you put them in a
+system start up script*
+
+
+*to be added...*
 
 
 
 
 # Notes
 
-Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power-Wiki) for more background.
+Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power-Wiki) for more background on battery charging, power usage by the Pi etc.
 
 
 The power on / power off machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project from Daniel Bull, which I have contributed to.
@@ -153,11 +198,12 @@ I did have a problem with the shutdown pin (GPIO26 in the circuit) getting trigg
 cable back in, after it had been disconnected.
 I solved that by placing a 0.1uF ceramic capacitor between GPIO26 and Ground.
 
-In addition, there can be voltage drop over longer wires and the breadboard tracks. The Adafruit guide to the PowerBoost 1000C mentions this. Shorter wires are better.
+In addition, there can be voltage drop over longer wires and the breadboard tracks. The Adafruit guide to the PowerBoost 1000C mentions this.
+*Shorter wires are better*
 
 
-Please do not just wire your circuit from the breadboard diagram - understand the circuit first - you may be able to come up with a neater layout.
-More importantly, I may have made a mistake in creating the diagram.
+Please do not just wire your circuit from the breadboard diagram - understand the circuit first - you may be able to come up with a neater layout and,
+more importantly, I may have made a mistake in creating the diagram.
 
 Use raspiconfig for older Pis...
 

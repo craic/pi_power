@@ -51,7 +51,7 @@ when the battery runs out, or when the user pushes a button. It writes the curre
 [pi_power_leds.py](pi_power_leds.py) checks the status file and sets a red or green led according to that.
 
 
-*Read on for details*
+*Read on for details...*
 
 
 # Hardware
@@ -74,6 +74,19 @@ from Daniel Bull.
 
 ## Voltage Monitoring with an ADC
 
+The PowerBoost1000C has several pins that we can measure voltages from.
+
+The **Bat** pin has the output voltage of the LiPoly battery
+
+The **USB** pin has the voltage of the input USB connection. When the cable is not connected this is 0 V and around 5.2V when connected.
+Nominally, a USB power supply provides 5V but manufacturers often bump this up a little bit to counteract any voltage drop over
+the supply cables.
+
+The measured USB voltage is used to determine if the cable is attached or not. Doing this via an ADC is overkill but
+as we need one for the battery voltage, it makes sense to use it.
+
+The Battery voltage is what really tells us the current battery status.
+
 ![Battery monitor ADC - schematic](/images/pi_power_schematic_2.png)
 
 
@@ -94,6 +107,16 @@ Here is a larger version of this [layout](https://github.com/craic/pi_power/imag
 And here is what my actual breadboard looks like - not pretty, but functional
 
 ![Breadboard Photo](/images/breadboard_photo.jpg)
+
+
+# Software
+
+
+
+
+# Deployment
+
+
 
 
 

@@ -51,7 +51,7 @@ when the battery runs out, or when the user pushes a button. It writes the curre
 [pi_power_leds.py](pi_power_leds.py) checks the status file and sets a red or green led according to that.
 
 
-
+*Read on for details*
 
 
 # Hardware
@@ -63,6 +63,8 @@ only powers the RasPi but also recharges the battery. It is a great little devic
 
 There are three parts to the circuitry
 
+## Power On / Power Off Switch
+
 A momentary pushbutton switch is used to power up the Pi from a cold start and to trigger an orderly shutdown of the system.
 This machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
 from Daniel Bull.
@@ -70,8 +72,18 @@ from Daniel Bull.
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 
 
+## Voltage Monitoring with an ADC
+
+![Battery monitor ADC - schematic](/images/pi_power_schematic_2.png)
 
 
+
+## Battery Status LEDs
+
+![Status LEDs - schematic](/images/pi_power_schematic_3.png)
+
+
+## Putting it all together
 
 Wiring all this up on a breadboard gets you something like this:
 

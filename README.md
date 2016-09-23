@@ -21,8 +21,10 @@ What I want is something equivalent to the way my iPhone works
 - To recharge the battery, just plug in a cable from a USB charger
 
 
-This project provides one approach to reaching this goal.
+This project provides one approach to reaching this goal, building on the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
+from Daniel Bull, which I have contributed to.
 
+# Overview
 
 The system consists of some relatively simple circuitry that links the Pi with a LiPoly battery charger
 and two Python scripts that handle monitoring and control.
@@ -54,6 +56,20 @@ when the battery runs out, or when the user pushes a button. It writes the curre
 
 # Hardware
 
+The system uses a
+[Adafruit PowerBoost 1000 Charger - Rechargeable 5V Lipo USB Boost @ 1A - 1000C](https://www.adafruit.com/products/2465)
+to provide regulated 5V power from a LiPoly battery or a USB power supply. When a USB power supply is attached, the PowerBoost not
+only powers the RasPi but also recharges the battery. It is a great little device for this sort of project.
+
+There are three parts to the circuitry
+
+A momentary pushbutton switch is used to power up the Pi from a cold start and to trigger an orderly shutdown of the system.
+This machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
+from Daniel Bull.
+
+
+
+
 ![Breadboard](/images/pi_power_breadboard_small.png)
 
 Here is a larger version of this [layout](https://github.com/craic/pi_power/images/pi_power_breadboard.png)
@@ -83,7 +99,11 @@ In addition, there can be voltage drop over longer wires and the breadboard trac
 Please do not just wire your circuit from the breadboard diagram - understand the circuit first - you may be able to come up with a neater layout.
 More importantly, I may have made a mistake in cerating the diagram.
 
+Use raspiconfig for older Pis...
 
+Add the fix for Pi 3 etc...
+
+Warning about systemd etc...
 
 
 

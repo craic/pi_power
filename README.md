@@ -81,7 +81,7 @@ Here is a larger version of this [layout](https://github.com/craic/pi_power/imag
 
 And here is what my actual breadboard looks like - not pretty, but functional
 
-![Breadboard](/images/breadboard_photo.png)
+![Breadboard Photo](/images/breadboard_photo.jpg)
 
 
 

@@ -1,6 +1,6 @@
 # pi_power
 
-**As of 09/23/2016 this is incomplete - I'm trying to get it finished - please check back soon**
+**As of 09/23/2016 this is incomplete - I'm trying to get it finished but please don't go building a version of it until it's ready - please check back soon**
 
 The [Raspberry Pi](https://www.raspberrypi.org/) is a low cost, single board computer with reasonable performance and relatively low power
 consumption, typically a version of the Linux operating system, often [Raspbian](https://www.raspberrypi.org/downloads/raspbian/).
@@ -112,11 +112,12 @@ And here is what my actual breadboard looks like - not pretty, but functional
 
 # Software
 
-
+**to be added...**
 
 
 # Deployment
 
+**to be added...**
 
 
 
@@ -141,7 +142,7 @@ In addition, there can be voltage drop over longer wires and the breadboard trac
 
 
 Please do not just wire your circuit from the breadboard diagram - understand the circuit first - you may be able to come up with a neater layout.
-More importantly, I may have made a mistake in cerating the diagram.
+More importantly, I may have made a mistake in creating the diagram.
 
 Use raspiconfig for older Pis...
 

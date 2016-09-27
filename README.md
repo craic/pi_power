@@ -84,7 +84,7 @@ A momentary pushbutton switch is used to power up the Pi from a cold start and t
 This machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
 from Daniel Bull, which I contributed to. Here is a description of how that works.
 
-Pre-RasPi 3 circuit
+#Pre-RasPi 3 circuit
 
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 
@@ -114,10 +114,9 @@ configuration and if you don't need it then leave it out.
 
 Important Note - RasPi 3 treats GPIO14 differently - see the circuit below for the necessary change
 
-![Pi3 Power On / Power Off - schematic](/images/pi_power_schematic_power_on_off_pi3.png)
 
 
-RasPi 3 circuit
+#RasPi 3 circuit
 
 *to be added*
 
@@ -132,6 +131,8 @@ and adding a capacitor across the 100K resistor to smooth the voltage on GPIO14 
 2 Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematicc.
 
 *to be added*
+
+![Pi3 Power On / Power Off - schematic](/images/pi_power_schematic_power_on_off_pi3.png)
 
 
 ## Voltage Monitoring with an ADC

@@ -66,7 +66,7 @@ You can safely shutdown the system manually by pressing the pushbutton again. Th
 to the Pi (the blue PowerBoost LED will go out). If the USB cable is connected, the battery will continue to recharge.
 
 If you let the battery run out, the Red LED will warn you by flashing and when the fraction remaining reaches a low, but safe, level the system will
-shutdown. The shutdown level is set to ensure a safe shutdown before the battery is completley exhausted.
+shutdown. The shutdown level is set conservatively to ensure the battery does not drain completely and cause the Pi to lose power.
 
 # Hardware
 
@@ -106,11 +106,30 @@ To shutdown safely using the push button:
 Note that it leaves out the low battery component of that project as we can monitor that as part of the
 battery voltage in the next section.
 
+Also note the addition of a 0.1uF ceramic capacitor between GPIO26 and Ground. Without this, GPIO26 would trigger a shutdown whenever
+I plugged the USB power cable into the PowerBoost. I don't why this happens but it probably because of relatively
+long wires on the breadboard acting as radio antennae and picking up some sort of spike when the USB cable was connected.
+This was easily solved, however, by adding the capacitor to smooth out the line to GPIO26. Try it in your
+configuration and if you don't need it then leave it out.
+
 Important Note - RasPi 3 treats GPIO14 differently - see the circuit below for the necessary change
 
+![Pi3 Power On / Power Off - schematic](/images/pi_power_schematic_power_on_off_pi3.png)
 
 
 RasPi 3 circuit
+
+*to be added*
+
+The RasPi model 3 changed the way GPIO14 operates. There are two important changes to the approach:
+
+Pre-RasPi3 the serial console that uses GPIO14 used a hardware UART and that is what led GPIO14 to be high.
+RasPi 3 uses a software UART which does not do this. But we can emulate this by *enabling* the serial console in raspi-config
+and adding a capacitor across the 100K resistor to smooth the voltage on GPIO14 and keep the PowerBoost Enable pin high.
+
+
+1 Do not make the raspi-config change
+2 Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematicc.
 
 *to be added*
 

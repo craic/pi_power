@@ -82,7 +82,11 @@ There are three parts to the circuitry
 
 A momentary pushbutton switch is used to power up the Pi from a cold start and to trigger an orderly shutdown of the system.
 This machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
-from Daniel Bull, which I contributed to. Please check out that site for information on how that all works - but here is the short version.
+from Daniel Bull, which I contributed to. Here is a description of how that works.
+
+Pre-RasPi 3 circuit
+
+![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 
 To power up from a cold start using the push button:
 
@@ -104,9 +108,7 @@ battery voltage in the next section.
 
 Important Note - RasPi 3 treats GPIO14 differently - see the circuit below for the necessary change
 
-Pre-RasPi 3 circuit
 
-![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 
 RasPi 3 circuit
 
@@ -149,6 +151,9 @@ The system needs a way to tell the user how much power remains in the battery. O
 from the RasPi to implement a simple interface - green is good, red means low battery.
 
 ![Status LEDs - schematic](/images/pi_power_schematic_3.png)
+
+
+![Status LEDs - schematic](/images/battery_voltage_graph.png)
 
 
 ## Putting it all together

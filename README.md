@@ -153,7 +153,6 @@ from the RasPi to implement a simple interface - green is good, red means low ba
 ![Status LEDs - schematic](/images/pi_power_schematic_3.png)
 
 
-![Status LEDs - schematic](/images/battery_voltage_graph.png)
 
 
 ## Putting it all together
@@ -186,7 +185,7 @@ more importantly, I may have made a mistake in creating the diagram.
 
 # Software
 
-*to be added...*
+*incomplete...*
 
 The software end of Pi Power is split into two components.
 
@@ -211,6 +210,10 @@ It is easy to change the specific LED patterns but the default ones are:
 * Red, Constant - Battery - more than 15% of battery remains
 * Red, Blinking - Battery - more than 10% of battery remains
 * Red, Blinking Fast - Battery - less than 10% of battery remains - system will shutdown soon
+
+Here is a plot of battery voltage over time, marked to show how the LED modes correspond to voltage.
+
+![Status LEDs - schematic](/images/battery_voltage_graph.png)
 
 The script checks the status file every 30 seconds so there can be a delay between, say, plugging in a USB supply and the LEDs
 updating. Reducing the poll interval would improve this.

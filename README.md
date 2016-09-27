@@ -82,12 +82,29 @@ There are three parts to the circuitry
 
 A momentary pushbutton switch is used to power up the Pi from a cold start and to trigger an orderly shutdown of the system.
 This machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
-from Daniel Bull, which I contributed to. Please check out that site for information on how that all works.
+from Daniel Bull, which I contributed to. Please check out that site for information on how that all works - but here is the short version.
+
+To power up from a cold start using the push button:
+
+* The push button pulls the PowerBoost Enable pin high
+* The PowerBoost delivers power to the Pi which starts to boot
+* GPIO14 on the Pi goes high without any software being run
+* GPIO14 keeps the PowerBoost Enable pin high when the push button is released
+
+To shutdown safely using the push button:
+
+* The pi_power.py script monitors GPIO26
+* Pressing the push button sends this pin high and the script triggers a safe shutdown
+* Shutdown means that GPIO14 is no longer high and so the PowerBoost stops sending power to the Pi
+* The diodes isolate the power up and power down functions
+* The two diodes in series serve to drop the battery voltage to a safe level for the Pi GPIO pin
 
 Note that it leaves out the low battery component of that project as we can monitor that as part of the
 battery voltage in the next section.
 
-Pre-RasPi 3 cicruit
+Important Note - RasPi 3 treats GPIO14 differently - see the circuit below for the necessary change
+
+Pre-RasPi 3 circuit
 
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 
@@ -146,7 +163,7 @@ And here is what my actual breadboard looks like - not pretty, but functional
 
 ![Breadboard Photo](/images/breadboard_photo.jpg)
 
-The breadboard layout was created to make the circuit easy to understand (you may argue whether or not I succeeded in that!).
+The breadboard layout was created to make the circuit easy to understand (you may argue whether or not I succeeded...).
 One consequence of that is that a number of the jumper wires are relatively long, compared to a compact circuit board.
 This may have a couple of unwanted side effects.
 
@@ -184,7 +201,7 @@ I have chosen the simple approach here of using a Red and Green LED to indicate 
 [pi_power_leds.py](pi_power_leds.py) checks the status file and sets either led according to that.
 It is easy to change the specific LED patterns but the default ones are:
 
-* Green, Blinking - USB power source is connected
+* Green, Blinking - USB power source is connected - Battery is charging
 * Green, Constant - Battery - more than 25% of battery remains
 * Red, Constant - Battery - more than 15% of battery remains
 * Red, Blinking - Battery - more than 10% of battery remains
@@ -193,7 +210,7 @@ It is easy to change the specific LED patterns but the default ones are:
 The script checks the status file every 30 seconds so there can be a delay between, say, plugging in a USB supply and the LEDs
 updating. Reducing the poll interval would improve this.
 
-# Deployment
+# Installation
 
 Both scripts are intended to be run as silent background processes that start up when the Pi boots.
 

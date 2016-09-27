@@ -127,8 +127,8 @@ RasPi 3 uses a software UART which does not do this. But we can emulate this by 
 and adding a capacitor across the 100K resistor to smooth the voltage on GPIO14 and keep the PowerBoost Enable pin high.
 
 
-1 Do not make the raspi-config change
-2 Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematicc.
+1. Do not make the raspi-config change
+2. Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematicc.
 
 *to be added*
 

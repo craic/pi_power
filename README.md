@@ -71,10 +71,19 @@ to the Pi (the blue PowerBoost LED will go out). If the USB cable is connected, 
 If you let the battery run out, the Red LED will warn you by flashing and when the fraction remaining reaches a low, but safe, level the system will
 shutdown. The shutdown level is set conservatively to ensure the battery does not drain completely and cause the Pi to lose power.
 
-This plot shows the battery voltage as it drains over times under a load.
+This plot shows the battery voltage as it drains over times under a load, along with the LED modes.
 
-![Status LEDs - schematic](/images/battery_voltage_graph.png)
+![Voltage graph](/images/battery_voltage_graph.png)
 
+![Voltage graph - full cycle](/images/battery_voltage_graph_full_cycle.png)
+
+When the USB power cable is connected to the PowerBoost and the battery is fully charged, the battery voltage is around 4.15V.
+When that cable is removed, the battery becomes the power source and the voltage drops immediately to around 4.05 V (I'm not sure why...)
+and then decays down to around 3.7V at which point it can not longer power the Pi.
+
+pi_power sets 4.05V as the 100% power level and 3.75V as 0%, which gives a bit of a buffer at the low end. Between the two levels
+the voltage decline is *close enough* to being linear that we can use predict the fraction of battery remaining from the voltage.
+It's not totally accurate but it is good enough for our purposes here.
 
 # Hardware
 
@@ -139,7 +148,8 @@ and adding a capacitor across the 100K resistor to smooth the voltage on GPIO14 
 1. Check you have the correct configuration in **raspi-config** - see Installation below
 2. Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematic.
 
-This solution was figured out by [Daniel Bull](https://github.com/NeonHorizon) and [Simon Claessen](https://github.com/macsimski)
+This solution was figured out by [Daniel Bull](https://github.com/NeonHorizon) and [Simon Claessen](https://github.com/macsimski) in the
+[LiPoPi](https://github.com/NeonHorizon/lipopi) project - all the details are [here](https://github.com/NeonHorizon/lipopi/issues/9).
 
 
 
@@ -281,7 +291,7 @@ sudo easy_install rpi.gpio
 
 Boot your Pi and download pi_power.py and pi_power_leds.py and make them executable with *chmod a+x pi_power.py* etc.
 
-Run the scripts in a terminal window, using the --debug option for pi_power.py.
+Run the scripts in a terminal window, using the **--debug** option for pi_power.py.
 
 ```bash
 $ ./pi_power_leds.py &
@@ -297,12 +307,12 @@ You want to test all the functions:
 - Check all LED modes with and without USB cable, allowing the system to drain the battery
 - Allow the battery to drain and trigger a low battery shutdown
 
-Depending on the size of your battery, this can take some time but you need to test it thoroughly before make the scripts start on boot.
+Depending on the size of your battery, this can take some time but you need to test it thoroughly before making the scripts start on boot.
 
 
 
 
-## Run scripts on boot
+## Run the scripts on Boot
 
 Both scripts are intended to be run as silent background processes that start up when the Pi boots.
 
@@ -310,8 +320,11 @@ To do this you want to add them to **/etc/rc.local**
 
 ```bash
 
-# add to rc.local
+# add the full path to the your copies of the scripts
+# run them in the background - no need to run with sudo
 
+/home/pi/pi_power_leds.py &
+/home/pi/pi_power.py --safe &
 ```
 
 **NOTE** The Pi boot process is different from other Linux systems in that there is no single-user mode. That
@@ -335,13 +348,12 @@ Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power
 The power on / power off machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project from Daniel Bull, which I have contributed to.
 If you want a simpler solution without the voltage monitoring machinery then LiPoPi might be just what you need.
 
-
-
-Use raspiconfig for older Pis...
-
 Currently there is no way for the software to know when the battery is fully charged. On the PowerBoost, the yellow charging LED changes to Green, so
 the information is available. There is just no easy way to get it to the Pi. Accurately estimating it from the voltage does not seem to work
 well in practice.
+
+Adafruit also sell the PowerBoost 500C charger. This can output a maximum current of 500mA as opposed to the 1A of the 1000C. More importantly, the 500C
+can power its output or charge the battery, but not both. The 1000C can charge the battery while powering the Pi, so this is the one to use.
 
 
 

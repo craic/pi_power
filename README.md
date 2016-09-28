@@ -120,7 +120,7 @@ Important Note - RasPi 3 treats GPIO14 differently - see the circuit below for t
 
 *to be added*
 
-The RasPi model 3 changed the way GPIO14 operates. There are two important changes to the approach:
+The RasPi model 3 changed the way GPIO14 operates. There are two small but important changes to the approach:
 
 Pre-RasPi3 the serial console that uses GPIO14 used a hardware UART and that is what led GPIO14 to be high.
 RasPi 3 uses a software UART which does not do this. But we can emulate this by *enabling* the serial console in raspi-config
@@ -128,7 +128,7 @@ and adding a capacitor across the 100K resistor to smooth the voltage on GPIO14 
 
 
 1. Do not make the raspi-config change
-2. Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematicc.
+2. Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematic.
 
 *to be added*
 

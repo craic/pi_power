@@ -113,16 +113,15 @@ To shutdown safely using the pushbutton:
 * The diodes isolate the power up and power down functions
 * The two diodes in series serve to drop the battery voltage to a safe level for the Pi GPIO pin
 
-Note that it leaves out the low battery component of that project as we can monitor that as part of the
+Note that it leaves out the low battery component of the LiPoPi project as we can monitor that as part of the
 battery voltage in the next section.
 
-Also note the addition of a 0.1uF ceramic capacitor between GPIO26 and Ground. Without this, GPIO26 would trigger a shutdown whenever
+Note the addition of a 0.1uF ceramic capacitor between GPIO26 and Ground. Without this, GPIO26 would trigger a shutdown whenever
 I plugged the USB power cable into the PowerBoost. I don't why this happens but it probably because of relatively
 long wires on the breadboard acting as radio antennae and picking up some sort of spike when the USB cable was connected.
-This was easily solved, however, by adding the capacitor to smooth out the line to GPIO26. Try it in your
-configuration and if you don't need it then leave it out.
+This was easily solved, however, by adding the capacitor to smooth out the line to GPIO26.
 
-Important Note - RasPi 3 treats GPIO14 differently - see the circuit below for the necessary change
+Try it in your configuration and if you don't need it then leave it out.
 
 
 
@@ -137,10 +136,11 @@ RasPi 3 uses a software UART which does not do this. But we can emulate this by 
 and adding a capacitor across the 100K resistor to smooth the voltage on GPIO14 and keep the PowerBoost Enable pin high.
 
 
-1. Do not make the raspi-config change
+1. Check you have the correct configuration in **raspi-config** - see Installation below
 2. Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematic.
 
-*Incomplete*
+This solution was figured out by [Daniel Bull](https://github.com/NeonHorizon) and [Simon Claessen](https://github.com/macsimski)
+
 
 
 
@@ -302,18 +302,25 @@ Depending on the size of your battery, this can take some time but you need to t
 
 
 
-
+## Run scripts on boot
 
 Both scripts are intended to be run as silent background processes that start up when the Pi boots.
 
-One location for these would be /etc/rc.local
+To do this you want to add them to **/etc/rc.local**
 
+```bash
+
+# add to rc.local
+
+```
 
 **NOTE** The Pi boot process is different from other Linux systems in that there is no single-user mode. That
 makes it difficult to fix problems in start up scripts like this as you have no easy way to run the system
 up to, but not including, the problem script. *So... test everything really well before you put them in a
 system start up script*
 
+
+*--safe mode*
 
 *to be added...*
 

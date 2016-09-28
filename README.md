@@ -24,20 +24,23 @@ What I want is something equivalent to the way my iPhone works
 This project provides one approach to reaching this goal, building on the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
 from Daniel Bull.
 
+
 # Overview
 
 The system consists of some relatively simple circuitry that links the Pi with a LiPoly battery charger
 and two Python scripts that handle monitoring and control.
 
+The **hardware** consists of three subsystems:
 
-
-The **hardware** looks like this:
+1: A Power On / Power Off circuit taken from [LiPoPi](https://github.com/NeonHorizon/lipopi)
 
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 
+2: An Analog-Digital Converter that monitors the battery and USB voltages on the Power Boost
 
 ![Battery monitor ADC - schematic](/images/pi_power_schematic_2.png)
 
+3: Two status LEDs
 
 ![Status LEDs - schematic](/images/pi_power_schematic_3.png)
 
@@ -68,6 +71,11 @@ to the Pi (the blue PowerBoost LED will go out). If the USB cable is connected, 
 If you let the battery run out, the Red LED will warn you by flashing and when the fraction remaining reaches a low, but safe, level the system will
 shutdown. The shutdown level is set conservatively to ensure the battery does not drain completely and cause the Pi to lose power.
 
+This plot shows the battery voltage as it drains over times under a load.
+
+![Status LEDs - schematic](/images/battery_voltage_graph.png)
+
+
 # Hardware
 
 The system uses a
@@ -76,7 +84,7 @@ to provide regulated 5V power from a LiPoly battery or a USB power supply. When 
 only powers the RasPi but also recharges the battery. It is a great little device for this sort of project. Adafruit sell it
 for around $20 and they have a detailed [tutorial](https://learn.adafruit.com/adafruit-powerboost-1000c-load-share-usb-charge-boost) available.
 
-There are three parts to the circuitry
+There are three parts to the hardware side
 
 ## Power On / Power Off Switch
 
@@ -84,21 +92,23 @@ A momentary pushbutton switch is used to power up the Pi from a cold start and t
 This machinery is taken from the [LiPoPi](https://github.com/NeonHorizon/lipopi) project
 from Daniel Bull, which I contributed to. Here is a description of how that works.
 
+The specifics depend on whether you have a RasPi model 3 or earlier.
+
 ###Pre-RasPi 3 circuit
 
 ![Power On / Power Off - schematic](/images/pi_power_schematic_1.png)
 
-To power up from a cold start using the push button:
+To power up from a cold start using the pushbutton:
 
-* The push button pulls the PowerBoost Enable pin high
+* The pushbutton pulls the PowerBoost Enable pin high
 * The PowerBoost delivers power to the Pi which starts to boot
 * GPIO14 on the Pi goes high without any software being run
-* GPIO14 keeps the PowerBoost Enable pin high when the push button is released
+* GPIO14 keeps the PowerBoost Enable pin high when the pushbutton is released
 
-To shutdown safely using the push button:
+To shutdown safely using the pushbutton:
 
 * The pi_power.py script monitors GPIO26
-* Pressing the push button sends this pin high and the script triggers a safe shutdown
+* Pressing the pushbutton sends this pin high and the script triggers a safe shutdown
 * Shutdown means that GPIO14 is no longer high and so the PowerBoost stops sending power to the Pi
 * The diodes isolate the power up and power down functions
 * The two diodes in series serve to drop the battery voltage to a safe level for the Pi GPIO pin
@@ -118,7 +128,7 @@ Important Note - RasPi 3 treats GPIO14 differently - see the circuit below for t
 
 ###RasPi 3 circuit
 
-*to be added*
+![Pi3 Power On / Power Off - schematic](/images/pi_power_schematic_power_on_off_pi3.png)
 
 The RasPi model 3 changed the way GPIO14 operates. There are two small but important changes to the approach:
 
@@ -130,9 +140,8 @@ and adding a capacitor across the 100K resistor to smooth the voltage on GPIO14 
 1. Do not make the raspi-config change
 2. Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematic.
 
-*to be added*
+*Incomplete*
 
-![Pi3 Power On / Power Off - schematic](/images/pi_power_schematic_power_on_off_pi3.png)
 
 
 ## Voltage Monitoring with an ADC
@@ -231,7 +240,7 @@ It is easy to change the specific LED patterns but the default ones are:
 * Red, Blinking - Battery - more than 10% of battery remains
 * Red, Blinking Fast - Battery - less than 10% of battery remains - system will shutdown soon
 
-Here is a plot of battery voltage over time, marked to show how the LED modes correspond to voltage.
+Here is a plot of battery voltage over time, marked to show how the LED modes correspond to voltage (RasPi Zero and 2700mAh battery)
 
 ![Status LEDs - schematic](/images/battery_voltage_graph.png)
 
@@ -239,6 +248,61 @@ The script checks the status file every 30 seconds so there can be a delay betwe
 updating. Reducing the poll interval would improve this.
 
 # Installation
+
+## Prerequisites
+
+The Power Up function relies on GPIO14 which is used for the RasPi UART serial interface. Before installing the pi_power scripts, you need to
+configure this as follows:
+
+If you have a RasPi pre-model 3:
+
+Run **sudo raspi-config** and under "Advanced Options" select "Serial" followed by "No".
+>This prevents the Pi using GPIO 14 for the console (which would shut off the power).
+
+If you have a RasPi model 3:
+
+Run **sudo raspi-config** and under "Advanced Options" select "Serial" followed by "Yes". This should be the default
+
+>Python on the Pi - if you do not have Python and the Rpi.GPIO library installed on your Pi then you will need to do the following
+
+```bash
+sudo apt-get update
+sudo apt-get dist-upgrade
+
+sudo apt-get install python-dev
+
+sudo apt-get install python-setuptools
+sudo easy_install rpi.gpio
+```
+
+## pi_power scripts
+
+*The following assumes you have the hardware set up to use the GPIO pins as shown above*
+
+Boot your Pi and download pi_power.py and pi_power_leds.py and make them executable with *chmod a+x pi_power.py* etc.
+
+Run the scripts in a terminal window, using the --debug option for pi_power.py.
+
+```bash
+$ ./pi_power_leds.py &
+$ ./pi_power_debug.py --debug
+[...]
+```
+
+Make sure eveything works as expected - the LEDs show the correct status, you can shutdown and restart the system, etc.
+You want to test all the functions:
+
+- Power on from the pushbutton
+- Power down a running system from the pushbutton
+- Check all LED modes with and without USB cable, allowing the system to drain the battery
+- Allow the battery to drain and trigger a low battery shutdown
+
+Depending on the size of your battery, this can take some time but you need to test it thoroughly before make the scripts start on boot.
+
+
+
+
+
 
 Both scripts are intended to be run as silent background processes that start up when the Pi boots.
 
@@ -267,8 +331,6 @@ If you want a simpler solution without the voltage monitoring machinery then LiP
 
 
 Use raspiconfig for older Pis...
-
-Add the fix for Pi 3 etc...
 
 Currently there is no way for the software to know when the battery is fully charged. On the PowerBoost, the yellow charging LED changes to Green, so
 the information is available. There is just no easy way to get it to the Pi. Accurately estimating it from the voltage does not seem to work

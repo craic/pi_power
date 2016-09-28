@@ -2,8 +2,7 @@
 
 # pi_power.py
 
-# Copyright (c) 2016 Robert Jones, Craic Computing LLC
-# Freely distributed under the terms of the MIT License
+# Robert Jones 2016 jones@craic.com
 
 # The code for reading the MCP3008 analog to digital convertor (readadc) was
 # written by Limor "Ladyada" Fried for Adafruit Industries, (c) 2015
@@ -57,7 +56,7 @@ def readadc(adcnum, clockpin, mosipin, misopin, cspin):
                         adcout |= 0x1
 
         GPIO.output(cspin, True)
-
+        
         adcout >>= 1       # first bit is 'null' so drop it
         return adcout
 
@@ -91,7 +90,15 @@ def user_shutdown_setup(shutdown_pin):
 
 # User has pressed shutdown button - initiate a clean shutdown
 def user_shutdown(channel):
+    global safe_mode
+        
     shutdown_delay = 10 # seconds
+
+    # in Safe Mode, wait 2 mins before actually shutting down
+    if(safe_mode):
+        cmd = "sudo wall 'System shutting down in 2 minutes - SAFE MODE'"
+        os.system(cmd)
+        time.sleep(120)
 
     cmd = "sudo wall 'System shutting down in %d seconds'" % shutdown_delay
     os.system(cmd)
@@ -105,18 +112,26 @@ def user_shutdown(channel):
 
 # Shutdown system because of low battery
 def low_battery_shutdown():
-    shutdown_delay = 30 # seconds
+    global safe_mode
 
-    cmd = "sudo wall 'System shutting down in %d seconds'" % delay
+    shutdown_delay = 30 # seconds
+    
+    # in Safe Mode, wait 2 mins before actually shutting down
+    if(safe_mode):
+        cmd = "sudo wall 'System shutting down in 2 minutes - SAFE MODE'"
+        os.system(cmd)
+        time.sleep(120)
+    
+    cmd = "sudo wall 'System shutting down in %d seconds'" % shutdown_delay
     os.system(cmd)
     time.sleep(shutdown_delay)
     # Log message is added to /var/log/messages
     os.system("sudo logger -t 'pi_power' '** Low Battery - shutting down now **'")
     GPIO.cleanup()
     os.system("sudo shutdown now")
+                
 
-
-
+    
 
 # MAIN -----------------------
 
@@ -131,11 +146,15 @@ parser = argparse.ArgumentParser(description='Pi Power - Monitor battery status 
 
 parser.add_argument('-d', '--debug', action='store_true')
 parser.add_argument('-l', '--log',   action='store_true')
+parser.add_argument('-s', '--safe',  action='store_true')
 
 args = parser.parse_args()
 
+safe_mode = False
+if(args.safe):
+        safe_mode = True
 
-
+        
 # Setup the GPIO pin to use with the use shutdown button
 
 user_shutdown_pin = 26
@@ -218,11 +237,11 @@ while True:
         # read the analog pins on the ACD (range 0-1023) and convert to 0.0-1.0
         frac_v_bat = round(readadc(v_bat_adc_pin,   SPICLK, SPIMOSI, SPIMISO, SPICS)) / 1023.0
         frac_v_usb = round(readadc(v_usb_adc_pin,   SPICLK, SPIMOSI, SPIMISO, SPICS)) / 1023.0
-
+       
         # Calculate the true voltage
         v_bat = frac_v_bat * adc_conversion_factor
         v_usb = frac_v_usb * adc_conversion_factor
-
+                       
 
         fraction_battery = (v_bat - battery_min_voltage) / (battery_max_voltage - battery_min_voltage)
 
@@ -231,8 +250,8 @@ while True:
         elif fraction_battery < 0.0:
                fraction_battery = 0.0
 
-
-        # is the USB cable connected ? Vusb is either 0.0 or around 5.2V
+        
+        # is the USB cable connected ? Vusb is either 0.0 or around 5.2V       
         if v_usb > 1.0:
                 power_source = 'usb'
         else:
@@ -257,7 +276,7 @@ while True:
                 print '{0:6d}  {1:.3f}  {2:.3f}  {3:.3f}  {4:s}  {5:s}'.format(elapsed_time, v_bat, v_usb, fraction_battery, power_source, msg)
 
         # Open log file, write one line and close
-        # This handles the case where the battery is allowed to drain completely and
+        # This handles the case where the battery is allowed to drain completely and 
         # shutdown in which case the file may be corrupted
         if(args.log):
                 with open(pi_power_log_path, "a") as f:
@@ -269,9 +288,8 @@ while True:
 
         # Low battery shutdown - specify the time delay in seconds
         if fraction_battery < fraction_battery_min:
-                delay = 30
-                low_battery_shutdown(delay)
-
+                low_battery_shutdown()
+        
         # sleep poll_interval seconds between updates
         time.sleep(poll_interval)
 

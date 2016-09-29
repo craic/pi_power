@@ -54,8 +54,6 @@ when the battery runs out, or when the user pushes a button. It writes the curre
 [pi_power_leds.py](pi_power_leds.py) checks the status file and sets a red or green led according to that.
 
 
-*Read on for details...*
-
 
 # How it works
 
@@ -75,7 +73,6 @@ This plot shows the battery voltage as it drains over times under a load, along 
 
 ![Voltage graph](/images/battery_voltage_graph.png)
 
-![Voltage graph - full cycle](/images/battery_voltage_graph_full_cycle.png)
 
 When the USB power cable is connected to the PowerBoost and the battery is fully charged, the battery voltage is around 4.15V.
 When that cable is removed, the battery becomes the power source and the voltage drops immediately to around 4.05 V (I'm not sure why...)
@@ -181,7 +178,7 @@ team and manages SPI in software, as opposed to the Pi's hardware SPI interface,
 
 ![Battery monitor ADC - schematic](/images/pi_power_schematic_2.png)
 
-**Note that this is a schematic and does not correspond to the actual chip pinout.**
+*Note that this is a schematic and does not correspond to the actual chip pinout.*
 
 
 ## Battery Status LEDs
@@ -224,16 +221,19 @@ more importantly, I may have made a mistake in creating the diagram.
 
 # Software
 
-*incomplete...*
-
 The software end of Pi Power is split into two components.
 
-The first one does all the work. [pi_power.py](pi_power.py) monitors the battery, handles the power down process as
+[pi_power.py](pi_power.py) does all the work. It monitors the battery, handles the power down process as
 well as shutting down the Pi is the battery runs out. It checks the battery every minute and records the current status
 in the file /home/pi/.pi_power_status.
 
-You can tun it with --debug or --log options if you want to capture the voltage changes over time, but it general it
-is intended to run as a background process that starts up automatically when the Pi boots up.
+In general it is intended to run as a background process that starts up automatically when the Pi boots up.
+
+For testing you can run it from a shell. It can take three options:
+
+- *--debug* will output the battery and USB voltages every time it checks (once a minute)
+- *--log* outputs the same information to the file *pi_power_log.csv* which you can use to generate a plot of voltage over time
+- *--safe* delays system shutdown by 2 minutes. See the installation section for how this can be used.
 
 
 There are many ways to inform the user about the power status. You might have a numeric display on a screen, or a bar graph
@@ -316,29 +316,30 @@ Depending on the size of your battery, this can take some time but you need to t
 
 Both scripts are intended to be run as silent background processes that start up when the Pi boots.
 
-To do this you want to add them to **/etc/rc.local**
-
-```bash
-
-# add the full path to the your copies of the scripts
-# run them in the background - no need to run with sudo
-
-/home/pi/pi_power_leds.py &
-/home/pi/pi_power.py --safe &
-```
-
 **NOTE** The Pi boot process is different from other Linux systems in that there is no single-user mode. That
 makes it difficult to fix problems in start up scripts like this as you have no easy way to run the system
 up to, but not including, the problem script. *So... test everything really well before you put them in a
 system start up script*
 
 
-*--safe mode*
+To do this you want to add the full paths to the scripts to **/etc/rc.local**.
 
-*to be added...*
+```bash
+/home/pi/pi_power_leds.py &
+/home/pi/pi_power.py --safe &
+```
 
+Note the *--safe* option. Use this while you are testing. It delays the system shutdown for two minutes.
+Certain errors in your circuit can trigger an immediate shutdown. If you run into that, this delay gives you two
+minutes to edit *rc.local* and comment out the lines while you fix the problem.
 
+Once you have tested your system and you are confident that all is well, you can remove the *--safe* option.
+```bash
+/home/pi/pi_power_leds.py &
+/home/pi/pi_power.py &
+```
 
+*And that's it... once you have it set up it should just work...*
 
 # Notes
 
@@ -355,6 +356,8 @@ well in practice.
 Adafruit also sell the PowerBoost 500C charger. This can output a maximum current of 500mA as opposed to the 1A of the 1000C. More importantly, the 500C
 can power its output or charge the battery, but not both. The 1000C can charge the battery while powering the Pi, so this is the one to use.
 
+One downside of the power on / power off mechanism is that you can no longer reboot the machine using the *shutdown -r now* command.
+The system will shutdown the PowerBoost which cuts power for the reboot. Simply shutdown and hit the pushbutton to ge the same effect.
 
 
 

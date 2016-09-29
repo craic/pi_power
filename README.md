@@ -25,7 +25,7 @@ from Daniel Bull.
 
 # Overview
 
-The system consists of some relatively simple circuitry that links the Pi with a LiPoly battery charger
+The system consists of some relatively simple circuitry that links the Pi with a [LiPoly battery charger](https://www.adafruit.com/products/2465)
 and two Python scripts that handle monitoring and control.
 
 The **hardware** consists of three subsystems:

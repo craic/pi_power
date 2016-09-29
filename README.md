@@ -1,7 +1,5 @@
 # Pi Power
 
-**As of 09/23/2016 this is incomplete - I'm trying to get it finished but please don't go building a version of it until it's ready - please check back soon**
-
 The [Raspberry Pi](https://www.raspberrypi.org/) is a low cost, single board computer with reasonable performance and relatively low power
 consumption, typically a version of the Linux operating system, often [Raspbian](https://www.raspberrypi.org/downloads/raspbian/).
 
@@ -231,9 +229,9 @@ In general it is intended to run as a background process that starts up automati
 
 For testing you can run it from a shell. It can take three options:
 
-- *--debug* will output the battery and USB voltages every time it checks (once a minute)
-- *--log* outputs the same information to the file *pi_power_log.csv* which you can use to generate a plot of voltage over time
-- *--safe* delays system shutdown by 2 minutes. See the installation section for how this can be used.
+- **--debug** will output the battery and USB voltages every time it checks (once a minute)
+- **--log** outputs the same information to the file *pi_power_log.csv* which you can use to generate a plot of voltage over time
+- **--safe** delays system shutdown by 2 minutes. See the installation section for how this can be used.
 
 
 There are many ways to inform the user about the power status. You might have a numeric display on a screen, or a bar graph
@@ -266,14 +264,14 @@ configure this as follows:
 
 If you have a RasPi pre-model 3:
 
-Run **sudo raspi-config** and under "Advanced Options" select "Serial" followed by "No".
->This prevents the Pi using GPIO 14 for the console (which would shut off the power).
+Run **sudo raspi-config** and under "Advanced Options" select "Serial" followed by **No**.
+This prevents the Pi using GPIO 14 for the console (which would shut off the power).
 
 If you have a RasPi model 3:
 
-Run **sudo raspi-config** and under "Advanced Options" select "Serial" followed by "Yes". This should be the default
+Run **sudo raspi-config** and under "Advanced Options" select "Serial" followed by **Yes**. This should be the default
 
->Python on the Pi - if you do not have Python and the Rpi.GPIO library installed on your Pi then you will need to do the following
+Python on the Pi - if you do not have Python and the Rpi.GPIO library installed on your Pi then you will need to do the following
 
 ```bash
 sudo apt-get update
@@ -329,17 +327,17 @@ To do this you want to add the full paths to the scripts to **/etc/rc.local**.
 /home/pi/pi_power.py --safe &
 ```
 
-Note the *--safe* option. Use this while you are testing. It delays the system shutdown for two minutes.
+Note the **--safe** option. Use this while you are testing. It delays the system shutdown for two minutes.
 Certain errors in your circuit can trigger an immediate shutdown. If you run into that, this delay gives you two
 minutes to edit *rc.local* and comment out the lines while you fix the problem.
 
-Once you have tested your system and you are confident that all is well, you can remove the *--safe* option.
+Once you have tested your system and you are confident that all is well, you can remove the **--safe** option.
 ```bash
 /home/pi/pi_power_leds.py &
 /home/pi/pi_power.py &
 ```
 
-*And that's it... once you have it set up it should just work...*
+*And that's it... hope you like it...*
 
 # Notes
 
@@ -356,8 +354,8 @@ well in practice.
 Adafruit also sell the PowerBoost 500C charger. This can output a maximum current of 500mA as opposed to the 1A of the 1000C. More importantly, the 500C
 can power its output or charge the battery, but not both. The 1000C can charge the battery while powering the Pi, so this is the one to use.
 
-One downside of the power on / power off mechanism is that you can no longer reboot the machine using the *shutdown -r now* command.
-The system will shutdown the PowerBoost which cuts power for the reboot. Simply shutdown and hit the pushbutton to ge the same effect.
+One downside of the power on / power off mechanism is that you can no longer **reboot** the machine using the **shutdown -r now** command.
+The system will shutdown the PowerBoost which cuts power for the reboot. Simply shutdown and hit the pushbutton to get the same effect.
 
 
 

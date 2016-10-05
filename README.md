@@ -231,7 +231,7 @@ more importantly, I may have made a mistake in creating the diagram.
 Here is a photo of another breadboard layout where I've gone for a more compact layout. Note that the wires are much shorter and I did not
 need the 0.1uF capacitor on the power down circuit.
 
-![Breadboard Photo 2](/images/pi_power_breadboard_photo_2.jpg)
+![Breadboard Photo 2](/images/pi_power_breadboard_photo_2.png)
 
 
 # Software

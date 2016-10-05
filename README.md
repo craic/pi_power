@@ -127,9 +127,20 @@ This was easily solved, however, by adding the capacitor to smooth out the line 
 
 Try it in your configuration and if you don't need it then leave it out.
 
+This has been tested on these boards:
 
+* Raspberry Pi 2 Model B V1.1 (2014)
+* Raspberry Pi Zero v1.2 (2015)
+* Raspberry Pi 3 Model B V1.2 (2015)
 
 ###RasPi 3 circuit
+
+**NOTE** 2016/10/05 - This section was prompted by [this issue in the LiPoPi project](https://github.com/NeonHorizon/lipopi/issues/9) - but
+in my testing I find that the **Raspberry Pi 3 Model B V1.2** works fine with the original circuit ...
+
+I'm trying to resolve this but you might want to try the original circuit and if that doesn't work, try the following change.
+Sorry for any confusion...
+
 
 ![Pi3 Power On / Power Off - schematic](/images/pi_power_schematic_power_on_off_pi3.png)
 
@@ -216,6 +227,9 @@ In addition, there can be voltage drop over longer wires and the breadboard trac
 
 Please do not just wire your circuit from the breadboard diagram - *understand the circuit first* - you may be able to come up with a neater layout and,
 more importantly, I may have made a mistake in creating the diagram.
+
+Here is a photo of another breadboard layout where I've gone for a more compact layout. Note that the wires are much shorter and I did not
+need the 0.1uF capacitor on the power down circuit.
 
 # Software
 

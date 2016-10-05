@@ -195,7 +195,7 @@ Wiring all this up on a breadboard gets you something like this:
 
 ![Breadboard](/images/pi_power_breadboard_small.png)
 
-Here is a larger version of this [layout](https://github.com/craic/pi_power/master/images/pi_power_breadboard.png)
+Here is a larger version of this [layout](https://raw.githubusercontent.com/craic/pi_power/master/images/pi_power_breadboard.png)
 
 And here is what my actual breadboard looks like - not pretty, but functional
 

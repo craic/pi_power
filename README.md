@@ -194,7 +194,9 @@ But you can use individual LEDs and wire them like this
 
 ![Status LEDs - schematic](/images/pi_power_schematic_3.png)
 
-If you do you will want to edit the pi_power_leds.py and comment/uncomment the relevant lines - see the comments in the code.
+If you do this you will want to edit the pi_power_leds.py and comment/uncomment the relevant lines - see the comments in the code.
+
+Note the breadboard diagram shows two individual LEDs in this 'common cathode' arrangement.
 
 
 

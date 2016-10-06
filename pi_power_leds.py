@@ -7,6 +7,8 @@
 
 # Read the contents of /home/pi/.pi_power_status and light red and green leds accordingly
 
+# The default configuration for the LEDs is Common Anode which works for most RGB LEDs
+
 # LED modes
 # green blinking    - USB cable attached, charging battery
 # green constant    - on battery, >= 0.5 fraction of battery life
@@ -23,53 +25,63 @@
 
 # Define each LED mode - set the on/off times here (in seconds) - 0 means always on
 def green_constant():
-    led_pin = led_pin_green
     blink_time_on  = 0
     blink_time_off = 0
-    update_leds(led_pin, blink_time_on, blink_time_off)
+    leds = ['green']
+    update_leds(leds, blink_time_on, blink_time_off)
 
 def red_constant():
-    led_pin = led_pin_red
     blink_time_on  = 0
     blink_time_off = 0
-    update_leds(led_pin, blink_time_on, blink_time_off)
+    leds = ['red']
+    update_leds(leds, blink_time_on, blink_time_off)
+
+def yellow_constant():
+    blink_time_on  = 0
+    blink_time_off = 0
+    leds = ['red', 'green']
+    update_leds(leds, blink_time_on, blink_time_off)
 
 def green_blink():
-    led_pin = led_pin_green
     blink_time_on  = 2.0
     blink_time_off = 0.5
-    update_leds(led_pin, blink_time_on, blink_time_off)
+    leds = ['green']
+    update_leds(leds, blink_time_on, blink_time_off)
 
 def red_blink():
-    led_pin = led_pin_red
     blink_time_on  = 1.0
     blink_time_off = 1.0
-    update_leds(led_pin, blink_time_on, blink_time_off)
+    leds = ['red']
+    update_leds(leds, blink_time_on, blink_time_off)
 
 def red_blink_fast():
-    led_pin = led_pin_red
     blink_time_on  = 0.5
     blink_time_off = 0.5
-    update_leds(led_pin, blink_time_on, blink_time_off)
+    leds = ['red']
+    update_leds(leds, blink_time_on, blink_time_off)
 
 
 
-def update_leds(current_led_pin, time_on, time_off):
-
+def update_leds(current_leds, time_on, time_off):
+    global led_pin
+    global led_states
     global poll_interval
 
     if time_off == 0:
         # constant on
-        GPIO.output(current_led_pin, GPIO.HIGH)
+        for i in range(len(current_leds)):
+            GPIO.output(led_pin[current_leds[i]], led_states['on'])
         time.sleep(poll_interval)
     else:
         # blink
         n_cycles = int(float(poll_interval) / float(time_on + time_off))
         for i in range(n_cycles):
             # led on, sleep, led off, sleep
-            GPIO.output(current_led_pin, GPIO.HIGH)
+            for i in range(len(current_leds)):
+                GPIO.output(led_pin[current_leds[i]], led_states['on'])
             time.sleep(time_on)
-            GPIO.output(current_led_pin, GPIO.LOW)
+            for i in range(len(current_leds)):
+                GPIO.output(led_pin[current_leds[i]], led_states['off'])
             time.sleep(time_off)
 
 
@@ -82,10 +94,16 @@ import RPi.GPIO as GPIO
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
+# If you are using a common Anode RGB LED use these - most RGB Leds are this type
+led_states = {'off': GPIO.HIGH, 'on': GPIO.LOW}
+
+# If you are using a common Cathode configuration use this instead
+# led_states = {'off': GPIO.LOW, 'on': GPIO.HIGH}
+
 
 # Specify the RasPi GPIO pins to use - modufy these to suit your configuration
-led_pin_red    = 21
-led_pin_green  = 20
+led_pin = {'red': 21, 'green': 20}
+
 
 # check the pi_power file every poll_interval seconds
 
@@ -98,8 +116,8 @@ pi_power_file_path = '/home/pi/.pi_power_status'
 power_source = 'unknown'
 power_fraction = 1.0
 
-GPIO.setup(led_pin_red,   GPIO.OUT)
-GPIO.setup(led_pin_green, GPIO.OUT)
+GPIO.setup(led_pin['red'],   GPIO.OUT)
+GPIO.setup(led_pin['green'], GPIO.OUT)
 
 
 # Read the .pi_power file at intervals and light the correct LED
@@ -117,16 +135,18 @@ while True:
         # dummy statement to handle python indentation...
         dummy = 1
 
-    GPIO.output(led_pin_red,   GPIO.LOW)
-    GPIO.output(led_pin_green, GPIO.LOW)
+    GPIO.output(led_pin['red'],   led_states['off'])
+    GPIO.output(led_pin['green'], led_states['off'])
 
     if power_source == 'usb':
         green_blink()
 
     elif power_source == 'battery':
 
+        # Modify the colors and cutoff levels to suit your needs
+
         if power_fraction >= 0.25:
-            green_constant()
+            yellow_constant()
 
         elif power_fraction >= 0.15:
             red_constant()

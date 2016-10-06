@@ -55,7 +55,7 @@ when the battery runs out, or when the user pushes a button. It writes the curre
 
 # How it works
 
-Starting with a powered down system, press the pushbutton and hold for a few seconds. The green activity LED on the Pi will start flickering to show
+Starting with a powered down system, press the pushbutton and hold for 3 or more seconds. The green activity LED on the Pi will start flickering to show
 that the system is booting up. At that point you can release the pushbutton. You'll see the boot messages if you have a screen attached.
 
 The two pi_power scripts will start up in background and the power status LEDs will indicate the current status.
@@ -141,12 +141,14 @@ and adding a capacitor across the 100K resistor to smooth the voltage on GPIO14 
 
 
 1. Check you have the correct configuration in **raspi-config** - see Installation below
-2. Place a 100uF 10V electrolytic capacitor in parallel to the 100K resistor, as shown in this schematic.
+2. Place a 100uF electrolytic capacitor in parallel to the 100K resistor, as shown in this schematic.
+
+I used a [100uF 16V capacitor](https://www.adafruit.com/products/2193)
 
 This solution was figured out by [Daniel Bull](https://github.com/NeonHorizon) and [Simon Claessen](https://github.com/macsimski) in the
 [LiPoPi](https://github.com/NeonHorizon/lipopi) project - all the details are [here](https://github.com/NeonHorizon/lipopi/issues/9).
 
-
+The 100uF capacitor should *not* be used in the pre-Pi 3 circuit.
 
 
 ## Voltage Monitoring with an ADC

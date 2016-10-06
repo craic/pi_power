@@ -286,6 +286,8 @@ This prevents the Pi using GPIO 14 for the console (which would shut off the pow
 
 If you have a RasPi model 3:
 
+**NOTE** See the note above - even if you have a Pi 3, try the 'pre-model 3' setup and see if it works for you first...
+
 Run **sudo raspi-config** and under "Advanced Options" select "Serial" followed by **Yes**. This should be the default
 
 Python on the Pi - if you do not have Python and the Rpi.GPIO library installed on your Pi then you will need to do the following

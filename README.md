@@ -38,10 +38,9 @@ The **hardware** consists of three subsystems:
 
 ![Battery monitor ADC - schematic](/images/pi_power_schematic_2.png)
 
-3: Two status LEDs
+3: Two status LEDs (or an RGB LED)
 
-![Status LEDs - schematic](/images/pi_power_schematic_3.png)
-
+![Status LEDs - schematic](/images/pi_power_schematic_3_leds_anode.png)
 
 
 The **software** consists of two python scripts:
@@ -186,8 +185,16 @@ team and manages SPI in software, as opposed to the Pi's hardware SPI interface,
 The system needs a way to tell the user how much power remains in the battery. One of the simplest ways is to control a Red and Green LED
 from the RasPi to implement a simple interface - green is good, red means low battery.
 
+Even better is to use an RGB LED and control the red and green components - you can even get yellow. Most RGB LEDs are Common Anode which means you
+need to use this circuit.
+
+![Status LEDs - schematic](/images/pi_power_schematic_3_leds_anode.png)
+
+But you can use individual LEDs and wire them like this
+
 ![Status LEDs - schematic](/images/pi_power_schematic_3.png)
 
+If you do you will want to edit the pi_power_leds.py and comment/uncomment the relevant lines - see the comments in the code.
 
 
 

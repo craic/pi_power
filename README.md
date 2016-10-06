@@ -127,20 +127,9 @@ This was easily solved, however, by adding the capacitor to smooth out the line 
 
 Try it in your configuration and if you don't need it then leave it out.
 
-This has been tested on these boards:
 
-* Raspberry Pi 2 Model B V1.1 (2014)
-* Raspberry Pi Zero v1.2 (2015)
-* Raspberry Pi 3 Model B V1.2 (2015)
 
 ###RasPi 3 circuit
-
-**NOTE** 2016/10/05 - This section was prompted by [this issue in the LiPoPi project](https://github.com/NeonHorizon/lipopi/issues/9) - but
-in my testing I find that the **Raspberry Pi 3 Model B V1.2** works fine with the original circuit ...
-
-I'm trying to resolve this but you might want to try the original circuit and if that doesn't work, try the following change.
-Sorry for any confusion...
-
 
 ![Pi3 Power On / Power Off - schematic](/images/pi_power_schematic_power_on_off_pi3.png)
 
@@ -286,8 +275,6 @@ This prevents the Pi using GPIO 14 for the console (which would shut off the pow
 
 If you have a RasPi model 3:
 
-**NOTE** See the note above - even if you have a Pi 3, try the 'pre-model 3' setup and see if it works for you first...
-
 Run **sudo raspi-config** and under "Advanced Options" select "Serial" followed by **Yes**. This should be the default
 
 Python on the Pi - if you do not have Python and the Rpi.GPIO library installed on your Pi then you will need to do the following
@@ -360,6 +347,12 @@ Once you have tested your system and you are confident that all is well, you can
 
 # Notes
 
+Pi Power has been tested successfully on these boards:
+
+* Raspberry Pi 2 Model B V1.1 (2014)
+* Raspberry Pi Zero v1.2 (2015)
+* Raspberry Pi 3 Model B V1.2 (2015) - using the Pi 3 modification shown above
+
 Please take a look at the [Wiki](https://github.com/craic/pi_power/wiki/Pi-Power-Wiki) for more background on battery charging, power usage by the Pi etc.
 
 
@@ -375,6 +368,11 @@ can power its output or charge the battery, but not both. The 1000C can charge t
 
 One downside of the power on / power off mechanism is that you can no longer **reboot** the machine using the **shutdown -r now** command.
 The system will shutdown the PowerBoost which cuts power for the reboot. Simply shutdown and hit the pushbutton to get the same effect.
+
+For a mobile system you may be tempted to skip the bulky USB cable between the PowerBoost and the Pi and just wire the output 5V and Ground
+to the corresponding pins on the GPIO header. This does work but is not recommended as it appears to bypass a power control circuit on the Pi.
+With a HDMI display plugged into the Pi with this configuration, the Blue output LED on the PowerBoost flickers dimly, suggesting some
+current path back to the PowerBoost from the HDMI display. I have not been able to troubleshoot this further.
 
 
 

@@ -146,7 +146,9 @@ while True:
         # Modify the colors and cutoff levels to suit your needs
 
         if power_fraction >= 0.25:
-            yellow_constant()
+            green_constant()
+            # if you have an RGB LED try this instead
+            # yellow_constant()
 
         elif power_fraction >= 0.15:
             red_constant()
